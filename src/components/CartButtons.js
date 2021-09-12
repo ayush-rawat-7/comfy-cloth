@@ -1,28 +1,40 @@
-import React from "react";
-import { FaShoppingCart, FaUserMinus, FaUserPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useProductsContext } from "../context/products_context";
-import { useCartContext } from "../context/cart_context";
-import { useUserContext } from "../context/user_context";
+import React from 'react'
+import { FaShoppingCart, FaUserMinus, FaUserPlus } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { useProductsContext } from '../context/products_context'
+import { useCartContext } from '../context/cart_context'
+import { useUserContext } from '../context/user_context'
 
 const CartButtons = () => {
-  const { closeSidebar } = useProductsContext();
+  const { closeSidebar } = useProductsContext()
+  const { total_items } = useCartContext()
+  const { loginWithRedirect, myUser, logout } = useUserContext()
   return (
-    <Wrapper className="cart-btn-wrapper">
-      <Link to="/cart" onClick={closeSidebar} className="cart-btn">
-        Cart{" "}
-        <span className="cart-container">
+    <Wrapper className='cart-btn-wrapper'>
+      <Link to='/cart' onClick={closeSidebar} className='cart-btn'>
+        Cart{' '}
+        <span className='cart-container'>
           <FaShoppingCart />
-          <span className="cart-value">12</span>
+          <span className='cart-value'>{total_items}</span>
         </span>
       </Link>
-      <button type="button" onClick={closeSidebar} className="auth-btn">
-        Login <FaUserPlus />
-      </button>
+      {!myUser ? (
+        <button type='button' onClick={loginWithRedirect} className='auth-btn'>
+          Login <FaUserPlus />
+        </button>
+      ) : (
+        <button
+          type='button'
+          onClick={() => logout({ returnTo: window.location.origin })}
+          className='auth-btn'
+        >
+          Logout <FaUserMinus />
+        </button>
+      )}
     </Wrapper>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
   display: grid;
@@ -76,5 +88,5 @@ const Wrapper = styled.div`
       margin-left: 5px;
     }
   }
-`;
-export default CartButtons;
+`
+export default CartButtons
